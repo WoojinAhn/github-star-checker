@@ -1,0 +1,102 @@
+name: Check GitHub Stars
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check-stars:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check stars and notify
+        uses: actions/github-script@v7
+        env:
+          STAR_MONITOR_TOKEN: ${{ secrets.STAR_MONITOR_TOKEN }}
+        with:
+          script: |
+            const fs = require('fs');
+            const token = process.env.STAR_MONITOR_TOKEN;
+            const octokit = github.getOctokit(token);
+
+            // Fetch all owned repos with pagination
+            const repos = await octokit.paginate(octokit.rest.repos.listForAuthenticatedUser, {
+              type: 'owner',
+              per_page: 100,
+            });
+
+            // Load previous star data
+            const dataPath = 'stars.json';
+            let previous = { last_checked: null, repos: {} };
+            try {
+              const raw = fs.readFileSync(dataPath, 'utf8');
+              previous = JSON.parse(raw);
+            } catch {
+              core.info('No previous stars.json found. Will initialize.');
+            }
+
+            const isFirstRun = previous.last_checked === null;
+            const current = {};
+            const changes = [];
+
+            for (const repo of repos) {
+              const fullName = repo.full_name;
+              const stars = repo.stargazers_count;
+              current[fullName] = stars;
+
+              const prev = previous.repos[fullName];
+
+              if (prev === undefined) {
+                // New repo — record only, no notification
+                core.info(`New repo detected: ${fullName} (${stars} stars)`);
+                continue;
+              }
+
+              const diff = stars - prev;
+              if (diff > 0) {
+                changes.push({ repo: fullName, prev, current: stars, diff });
+              }
+            }
+
+            // Create issues for star increases (skip on first run)
+            if (!isFirstRun) {
+              for (const change of changes) {
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: `⭐ ${change.repo} got ${change.diff} new star(s)! (${change.prev} → ${change.current})`,
+                  body: [
+                    `**Repository**: [${change.repo}](https://github.com/${change.repo})`,
+                    `**Stars**: ${change.prev} → ${change.current} (+${change.diff})`,
+                    `**Checked at**: ${new Date().toISOString()}`,
+                  ].join('\n'),
+                  labels: ['star-notification'],
+                });
+                core.info(`Issue created for ${change.repo}: +${change.diff} star(s)`);
+              }
+            } else {
+              core.info('First run — skipping notifications.');
+            }
+
+            // Write updated data
+            const data = {
+              last_checked: new Date().toISOString(),
+              repos: current,
+            };
+            fs.writeFileSync(dataPath, JSON.stringify(data, null, 2) + '\n');
+            core.info(`Updated stars.json with ${Object.keys(current).length} repos.`);
+
+      - name: Commit and push stars.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add stars.json
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "chore: update stars.json"
+          git push
