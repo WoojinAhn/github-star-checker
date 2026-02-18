@@ -2,16 +2,16 @@
 
 [한국어](README.ko.md)
 
-A GitHub Actions workflow that monitors star counts across all your repositories and sends an email notification when stars increase.
+A GitHub Actions workflow that monitors star counts across your public, non-fork repositories and sends an email notification when stars change.
 
 > **0 dependencies · GitHub Actions only · Single workflow file**
 
 ## How It Works
 
 1. Runs every 30 minutes (or manually via `workflow_dispatch`)
-2. Fetches star counts for all repositories owned by the authenticated user
+2. Fetches star counts for all public, non-fork repositories owned by the authenticated user
 3. Compares with previously recorded counts in `stars.json`
-4. Sends an email via Gmail SMTP listing repos that gained stars (with total star count)
+4. Sends an email via Gmail SMTP listing repos with star changes — both gains and losses
 5. Commits the updated `stars.json` back to the repository
 
 On the first run, it records the current star counts without sending notifications.
