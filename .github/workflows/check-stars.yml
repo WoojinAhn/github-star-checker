@@ -44,7 +44,7 @@ jobs:
             const changes = [];
 
             for (const repo of repos) {
-              if (repo.private) continue;
+              if (repo.private || repo.fork) continue;
               const fullName = repo.full_name;
               const stars = repo.stargazers_count;
               current[fullName] = stars;
