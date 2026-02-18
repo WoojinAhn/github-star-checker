@@ -18,17 +18,13 @@ jobs:
 
       - name: Check stars and notify
         uses: actions/github-script@v7
-        env:
-          STAR_MONITOR_TOKEN: ${{ secrets.STAR_MONITOR_TOKEN }}
         with:
+          github-token: ${{ secrets.STAR_MONITOR_TOKEN }}
           script: |
             const fs = require('fs');
-            const token = process.env.STAR_MONITOR_TOKEN;
-            const { getOctokit } = require('@actions/github');
-            const starOctokit = getOctokit(token);
 
             // Fetch all owned repos with pagination
-            const repos = await starOctokit.paginate(starOctokit.rest.repos.listForAuthenticatedUser, {
+            const repos = await github.paginate(github.rest.repos.listForAuthenticatedUser, {
               type: 'owner',
               per_page: 100,
             });
