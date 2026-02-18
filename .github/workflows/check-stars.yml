@@ -97,4 +97,5 @@ jobs:
           git add stars.json
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "chore: update stars.json"
+          git pull --rebase
           git push
