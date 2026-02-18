@@ -56,10 +56,14 @@ gh secret set NOTIFY_EMAIL
 ## Email Example
 
 ```
-Subject: ⭐ GitHub Star Alert: 2 repo(s) gained stars!
+Subject: ⭐ GitHub Star Alert: 3 repo(s) changed!
 
+⬆️ Gained:
 - user/repo-a: 3 → 5 (+2)
 - user/repo-b: 0 → 1 (+1)
+
+⬇️ Lost:
+- user/repo-c: 10 → 8 (-2)
 
 Total stars: 42
 Checked at: 2026-02-18T12:13:19Z

@@ -56,7 +56,7 @@ jobs:
               }
 
               const diff = stars - prev;
-              if (diff > 0) {
+              if (diff !== 0) {
                 changes.push({ repo: fullName, prev, current: stars, diff });
               }
             }
@@ -64,10 +64,20 @@ jobs:
             // Output changes for email step
             if (!isFirstRun && changes.length > 0) {
               const totalStars = Object.values(current).reduce((sum, s) => sum + s, 0);
-              const subject = `⭐ GitHub Star Alert: ${changes.length} repo(s) gained stars!`;
-              const body = changes
-                .map(c => `- ${c.repo}: ${c.prev} → ${c.current} (+${c.diff})`)
-                .join('\n');
+              const gains = changes.filter(c => c.diff > 0);
+              const losses = changes.filter(c => c.diff < 0);
+              const subject = `⭐ GitHub Star Alert: ${changes.length} repo(s) changed!`;
+              const lines = [];
+              if (gains.length > 0) {
+                lines.push('⬆️ Gained:');
+                lines.push(...gains.map(c => `- ${c.repo}: ${c.prev} → ${c.current} (+${c.diff})`));
+              }
+              if (losses.length > 0) {
+                if (lines.length > 0) lines.push('');
+                lines.push('⬇️ Lost:');
+                lines.push(...losses.map(c => `- ${c.repo}: ${c.prev} → ${c.current} (${c.diff})`));
+              }
+              const body = lines.join('\n');
               const checkedAt = new Date().toISOString();
               core.setOutput('has_changes', 'true');
               core.setOutput('subject', subject);
