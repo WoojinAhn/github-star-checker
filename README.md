@@ -14,6 +14,10 @@ A GitHub Actions workflow that monitors star counts across all your repositories
 
 On the first run, it records the current star counts without sending notifications.
 
+## Note
+
+No local clone is required. All logic runs on GitHub Actions. Setup and configuration can be done entirely through the GitHub web UI.
+
 ## Setup
 
 ### 1. GitHub PAT
