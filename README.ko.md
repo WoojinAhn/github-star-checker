@@ -21,6 +21,7 @@ GitHub Actions 워크플로우로 소유한 모든 레포지토리의 스타 수
 ## 준비물
 
 - [Classic Personal Access Token](https://github.com/settings/tokens/new) (`repo` + `workflow` 스코프)
+  > GitHub Actions가 기본 제공하는 `GITHUB_TOKEN`은 현재 레포지토리만 접근할 수 있으므로, 전체 레포지토리 목록 조회를 위해 별도 PAT이 필요합니다.
 - Gmail 계정 ([2단계 인증](https://myaccount.google.com/security) 활성화 필요) + [앱 비밀번호](https://myaccount.google.com/apppasswords)
 
 ## 빠른 시작 (Fork)
@@ -30,29 +31,18 @@ GitHub Actions 워크플로우로 소유한 모든 레포지토리의 스타 수
 3. **Settings > Secrets and variables > Actions**에서 아래 시크릿 4개 등록
 4. Actions 탭에서 수동 실행하거나, 다음 스케줄 실행을 대기
 
-## 설정 방법
+## 레포지토리 시크릿
 
-### 1. GitHub PAT
+위에서 준비한 값으로 아래 시크릿을 등록:
 
-`repo`와 `workflow` 스코프를 가진 [Classic Personal Access Token](https://github.com/settings/tokens/new) 생성
-
-> GitHub Actions가 기본 제공하는 `GITHUB_TOKEN`은 현재 레포지토리만 접근할 수 있으므로, 전체 레포지토리 목록 조회를 위해 별도 PAT이 필요합니다.
-
-### 2. Gmail 앱 비밀번호
-
-1. Google 계정에서 [2단계 인증](https://myaccount.google.com/security) 활성화
-2. [앱 비밀번호](https://myaccount.google.com/apppasswords) 생성 (앱 이름 예: `star-checker`)
-
-### 3. 레포지토리 시크릿
-
-아래 시크릿을 레포지토리에 등록:
-
-| 시크릿 | 설명 |
-|--------|------|
-| `STAR_MONITOR_TOKEN` | GitHub Classic PAT (`repo` + `workflow` 스코프) |
+| 시크릿 | 값 |
+|--------|-----|
+| `STAR_MONITOR_TOKEN` | Classic PAT |
 | `GMAIL_USER` | 발송용 Gmail 주소 |
-| `GMAIL_APP_PASSWORD` | 위에서 발급한 앱 비밀번호 |
+| `GMAIL_APP_PASSWORD` | Gmail 앱 비밀번호 |
 | `NOTIFY_EMAIL` | 알림 수신 이메일 주소 |
+
+또는 [GitHub CLI](https://cli.github.com/)로 등록:
 
 ```sh
 gh secret set STAR_MONITOR_TOKEN

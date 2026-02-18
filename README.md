@@ -21,6 +21,7 @@ No local clone is required. All logic runs on GitHub Actions. Setup and configur
 ## Prerequisites
 
 - [Classic Personal Access Token](https://github.com/settings/tokens/new) with `repo` and `workflow` scopes
+  > The default `GITHUB_TOKEN` provided by GitHub Actions can only access the current repository. A separate PAT is required to list all owned repositories.
 - Gmail account with [2-Step Verification](https://myaccount.google.com/security) enabled + [App Password](https://myaccount.google.com/apppasswords)
 
 ## Quick Start (Fork)
@@ -30,29 +31,18 @@ No local clone is required. All logic runs on GitHub Actions. Setup and configur
 3. Register the 4 secrets below in **Settings > Secrets and variables > Actions**
 4. Run the workflow manually from the Actions tab, or wait for the next scheduled run
 
-## Setup
+## Repository Secrets
 
-### 1. GitHub PAT
+Register the following secrets with the values prepared above:
 
-Create a [Classic Personal Access Token](https://github.com/settings/tokens/new) with `repo` and `workflow` scopes.
-
-> The default `GITHUB_TOKEN` provided by GitHub Actions can only access the current repository. A separate PAT is required to list all owned repositories.
-
-### 2. Gmail App Password
-
-1. Enable [2-Step Verification](https://myaccount.google.com/security) on your Google account
-2. Generate an [App Password](https://myaccount.google.com/apppasswords) (select app name e.g. `star-checker`)
-
-### 3. Repository Secrets
-
-Register the following secrets in the repository:
-
-| Secret | Description |
-|--------|-------------|
-| `STAR_MONITOR_TOKEN` | GitHub Classic PAT (`repo` + `workflow` scopes) |
-| `GMAIL_USER` | Gmail address used for sending |
-| `GMAIL_APP_PASSWORD` | Gmail app password from step 2 |
+| Secret | Value |
+|--------|-------|
+| `STAR_MONITOR_TOKEN` | Classic PAT |
+| `GMAIL_USER` | Gmail address for sending |
+| `GMAIL_APP_PASSWORD` | Gmail app password |
 | `NOTIFY_EMAIL` | Email address to receive notifications |
+
+Or via [GitHub CLI](https://cli.github.com/):
 
 ```sh
 gh secret set STAR_MONITOR_TOKEN
