@@ -1,12 +1,12 @@
 {
-  "last_checked": "2026-02-18T11:53:16.197Z",
+  "last_checked": "2026-02-18T11:56:55.303Z",
   "repos": {
     "WoojinAhn/chrome-cookie-reader": 0,
     "WoojinAhn/claude-code-tutorial": 0,
     "WoojinAhn/claude-config": 0,
     "WoojinAhn/claude-tutorial-playground": 0,
     "WoojinAhn/cursor-docs-crawler": 0,
-    "WoojinAhn/github-star-checker": 0,
+    "WoojinAhn/github-star-checker": 1,
     "WoojinAhn/miniroom-demo": 1,
     "WoojinAhn/my-first-blog": 0,
     "WoojinAhn/pwa_learning": 0,
