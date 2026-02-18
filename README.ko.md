@@ -2,28 +2,60 @@
 
 [English](README.md)
 
-GitHub Actions 워크플로우로 소유한 모든 레포지토리의 스타 수를 모니터링하고, 스타가 증가하면 GitHub Issue로 알려줍니다.
+GitHub Actions 워크플로우로 소유한 모든 레포지토리의 스타 수를 모니터링하고, 스타가 증가하면 Gmail로 이메일 알림을 보냅니다.
 
 ## 동작 방식
 
 1. 30분마다 자동 실행 (또는 `workflow_dispatch`로 수동 실행)
 2. 인증된 사용자가 소유한 모든 레포지토리의 스타 수를 조회
 3. `stars.json`에 기록된 이전 수치와 비교
-4. 스타가 증가한 레포마다 `star-notification` 라벨이 붙은 GitHub Issue 생성
+4. 스타가 증가한 레포 목록을 Gmail SMTP로 이메일 발송 (전체 스타 수 포함)
 5. 갱신된 `stars.json`을 커밋하여 레포지토리에 반영
 
-첫 실행 시에는 현재 스타 수만 기록하고 알림을 생성하지 않습니다.
+첫 실행 시에는 현재 스타 수만 기록하고 알림을 발송하지 않습니다.
 
 ## 설정 방법
 
-1. `repo`와 `workflow` 스코프를 가진 [Classic Personal Access Token](https://github.com/settings/tokens/new) 생성
-2. 레포지토리 시크릿으로 `STAR_MONITOR_TOKEN` 이름으로 등록
-   ```
-   gh secret set STAR_MONITOR_TOKEN
-   ```
-3. 스케줄에 따라 자동 실행되며, Actions 탭에서 수동 실행도 가능
+### 1. GitHub PAT
 
-> 기본 `GITHUB_TOKEN`은 현재 레포지토리만 접근할 수 있으므로, 전체 레포지토리 목록 조회를 위해 별도 PAT이 필요합니다.
+`repo`와 `workflow` 스코프를 가진 [Classic Personal Access Token](https://github.com/settings/tokens/new) 생성
+
+### 2. Gmail 앱 비밀번호
+
+1. Google 계정에서 [2단계 인증](https://myaccount.google.com/security) 활성화
+2. [앱 비밀번호](https://myaccount.google.com/apppasswords) 생성 (앱 이름 예: `star-checker`)
+
+### 3. 레포지토리 시크릿
+
+아래 시크릿을 레포지토리에 등록:
+
+| 시크릿 | 설명 |
+|--------|------|
+| `STAR_MONITOR_TOKEN` | GitHub Classic PAT (`repo` + `workflow` 스코프) |
+| `GMAIL_USER` | 발송용 Gmail 주소 |
+| `GMAIL_APP_PASSWORD` | 위에서 발급한 앱 비밀번호 |
+| `NOTIFY_EMAIL` | 알림 수신 이메일 주소 |
+
+```sh
+gh secret set STAR_MONITOR_TOKEN
+gh secret set GMAIL_USER
+gh secret set GMAIL_APP_PASSWORD
+gh secret set NOTIFY_EMAIL
+```
+
+스케줄에 따라 자동 실행되며, Actions 탭에서 수동 실행도 가능합니다.
+
+## 이메일 예시
+
+```
+제목: ⭐ GitHub Star Alert: 2 repo(s) gained stars!
+
+- user/repo-a: 3 → 5 (+2)
+- user/repo-b: 0 → 1 (+1)
+
+Total stars: 42
+Checked at: 2026-02-18T12:13:19Z
+```
 
 ## 파일 구조
 
