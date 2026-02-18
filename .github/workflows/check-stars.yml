@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  issues: write
 
 jobs:
   check-stars:
@@ -16,7 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check stars and notify
+      - name: Check stars
+        id: check
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.STAR_MONITOR_TOKEN }}
@@ -51,7 +51,6 @@ jobs:
               const prev = previous.repos[fullName];
 
               if (prev === undefined) {
-                // New repo — record only, no notification
                 core.info(`New repo detected: ${fullName} (${stars} stars)`);
                 continue;
               }
@@ -62,24 +61,19 @@ jobs:
               }
             }
 
-            // Create issues for star increases (skip on first run)
-            if (!isFirstRun) {
-              for (const change of changes) {
-                await github.rest.issues.create({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  title: `⭐ ${change.repo} got ${change.diff} new star(s)! (${change.prev} → ${change.current})`,
-                  body: [
-                    `**Repository**: [${change.repo}](https://github.com/${change.repo})`,
-                    `**Stars**: ${change.prev} → ${change.current} (+${change.diff})`,
-                    `**Checked at**: ${new Date().toISOString()}`,
-                  ].join('\n'),
-                  labels: ['star-notification'],
-                });
-                core.info(`Issue created for ${change.repo}: +${change.diff} star(s)`);
-              }
+            // Output changes for email step
+            if (!isFirstRun && changes.length > 0) {
+              const subject = `⭐ GitHub Star Alert: ${changes.length} repo(s) gained stars!`;
+              const body = changes
+                .map(c => `- ${c.repo}: ${c.prev} → ${c.current} (+${c.diff})`)
+                .join('\n');
+              const checkedAt = new Date().toISOString();
+              core.setOutput('has_changes', 'true');
+              core.setOutput('subject', subject);
+              core.setOutput('body', `${body}\n\nChecked at: ${checkedAt}`);
             } else {
-              core.info('First run — skipping notifications.');
+              core.setOutput('has_changes', 'false');
+              if (isFirstRun) core.info('First run — skipping notifications.');
             }
 
             // Write updated data
@@ -89,6 +83,20 @@ jobs:
             };
             fs.writeFileSync(dataPath, JSON.stringify(data, null, 2) + '\n');
             core.info(`Updated stars.json with ${Object.keys(current).length} repos.`);
+
+      - name: Send email notification
+        if: steps.check.outputs.has_changes == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: ${{ steps.check.outputs.subject }}
+          body: ${{ steps.check.outputs.body }}
+          from: GitHub Star Checker <${{ secrets.GMAIL_USER }}>
+          to: ${{ secrets.NOTIFY_EMAIL }}
 
       - name: Commit and push stars.json
         run: |
