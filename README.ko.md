@@ -20,9 +20,9 @@ GitHub Actions 워크플로우로 소유한 모든 레포지토리의 스타 수
 
 ## 준비물
 
-- [Classic Personal Access Token](https://github.com/settings/tokens/new) (`repo` + `workflow` 스코프)
+- [Classic Personal Access Token](https://github.com/settings/tokens/new) (`repo` + `workflow` 스코프) (예: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`)
   > GitHub Actions가 기본 제공하는 `GITHUB_TOKEN`은 현재 레포지토리만 접근할 수 있으므로, 전체 레포지토리 목록 조회를 위해 별도 PAT이 필요합니다.
-- Gmail 계정 ([2단계 인증](https://myaccount.google.com/security) 활성화 필요) + [앱 비밀번호](https://myaccount.google.com/apppasswords)
+- Gmail 계정 ([2단계 인증](https://myaccount.google.com/security) 활성화 필요) + [앱 비밀번호](https://myaccount.google.com/apppasswords) (예: `abcd efgh ijkl mnop`)
 
 ## 빠른 시작 (Fork)
 

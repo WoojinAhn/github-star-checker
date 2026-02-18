@@ -20,9 +20,9 @@ No local clone is required. All logic runs on GitHub Actions. Setup and configur
 
 ## Prerequisites
 
-- [Classic Personal Access Token](https://github.com/settings/tokens/new) with `repo` and `workflow` scopes
+- [Classic Personal Access Token](https://github.com/settings/tokens/new) with `repo` and `workflow` scopes (e.g. `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`)
   > The default `GITHUB_TOKEN` provided by GitHub Actions can only access the current repository. A separate PAT is required to list all owned repositories.
-- Gmail account with [2-Step Verification](https://myaccount.google.com/security) enabled + [App Password](https://myaccount.google.com/apppasswords)
+- Gmail account with [2-Step Verification](https://myaccount.google.com/security) enabled + [App Password](https://myaccount.google.com/apppasswords) (e.g. `abcd efgh ijkl mnop`)
 
 ## Quick Start (Fork)
 
