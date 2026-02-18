@@ -18,6 +18,12 @@ On the first run, it records the current star counts without sending notificatio
 
 No local clone is required. All logic runs on GitHub Actions. Setup and configuration can be done entirely through the GitHub web UI.
 
+## Prerequisites
+
+- GitHub account
+- Gmail account with [2-Step Verification](https://myaccount.google.com/security) enabled
+- (Optional) [GitHub CLI](https://cli.github.com/) — for registering secrets via terminal; can also be done through the web UI
+
 ## Quick Start (Fork)
 
 1. Fork this repository
