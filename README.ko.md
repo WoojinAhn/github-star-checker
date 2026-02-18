@@ -18,11 +18,20 @@ GitHub Actions 워크플로우로 소유한 모든 레포지토리의 스타 수
 
 로컬에 클론할 필요 없습니다. 모든 로직은 GitHub Actions에서 실행됩니다. 설정과 관리는 GitHub 웹 UI에서 모두 가능합니다.
 
+## 빠른 시작 (Fork)
+
+1. 이 레포지토리를 Fork
+2. **Actions** 탭에서 워크플로우 활성화 (Fork는 기본 비활성)
+3. **Settings > Secrets and variables > Actions**에서 아래 시크릿 4개 등록
+4. Actions 탭에서 수동 실행하거나, 다음 스케줄 실행을 대기
+
 ## 설정 방법
 
 ### 1. GitHub PAT
 
 `repo`와 `workflow` 스코프를 가진 [Classic Personal Access Token](https://github.com/settings/tokens/new) 생성
+
+> GitHub Actions가 기본 제공하는 `GITHUB_TOKEN`은 현재 레포지토리만 접근할 수 있으므로, 전체 레포지토리 목록 조회를 위해 별도 PAT이 필요합니다.
 
 ### 2. Gmail 앱 비밀번호
 
@@ -47,8 +56,6 @@ gh secret set GMAIL_APP_PASSWORD
 gh secret set NOTIFY_EMAIL
 ```
 
-스케줄에 따라 자동 실행되며, Actions 탭에서 수동 실행도 가능합니다.
-
 ## 이메일 예시
 
 ```
@@ -60,6 +67,10 @@ gh secret set NOTIFY_EMAIL
 Total stars: 42
 Checked at: 2026-02-18T12:13:19Z
 ```
+
+## 제한 사항
+
+GitHub Actions 무료 티어는 월 2,000분을 제공합니다. 이 워크플로우는 1회 실행에 약 10초 소요되므로, 30분 간격 실행 시 월 ~150분 사용합니다.
 
 ## 파일 구조
 

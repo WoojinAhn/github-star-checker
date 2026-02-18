@@ -18,11 +18,20 @@ On the first run, it records the current star counts without sending notificatio
 
 No local clone is required. All logic runs on GitHub Actions. Setup and configuration can be done entirely through the GitHub web UI.
 
+## Quick Start (Fork)
+
+1. Fork this repository
+2. Go to the **Actions** tab and enable workflows (disabled by default on forks)
+3. Register the 4 secrets below in **Settings > Secrets and variables > Actions**
+4. Run the workflow manually from the Actions tab, or wait for the next scheduled run
+
 ## Setup
 
 ### 1. GitHub PAT
 
 Create a [Classic Personal Access Token](https://github.com/settings/tokens/new) with `repo` and `workflow` scopes.
+
+> The default `GITHUB_TOKEN` provided by GitHub Actions can only access the current repository. A separate PAT is required to list all owned repositories.
 
 ### 2. Gmail App Password
 
@@ -47,8 +56,6 @@ gh secret set GMAIL_APP_PASSWORD
 gh secret set NOTIFY_EMAIL
 ```
 
-The workflow will start running on schedule, or trigger it manually from the Actions tab.
-
 ## Email Example
 
 ```
@@ -60,6 +67,10 @@ Subject: ⭐ GitHub Star Alert: 2 repo(s) gained stars!
 Total stars: 42
 Checked at: 2026-02-18T12:13:19Z
 ```
+
+## Limits
+
+GitHub Actions free tier provides 2,000 minutes/month. This workflow takes ~10 seconds per run, so running every 30 minutes uses ~150 minutes/month.
 
 ## File Structure
 
