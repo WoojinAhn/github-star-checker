@@ -20,9 +20,7 @@ No local clone is required. All logic runs on GitHub Actions. Setup and configur
 
 ## Prerequisites
 
-- GitHub account
 - Gmail account with [2-Step Verification](https://myaccount.google.com/security) enabled
-- (Optional) [GitHub CLI](https://cli.github.com/) — for registering secrets via terminal; can also be done through the web UI
 
 ## Quick Start (Fork)
 

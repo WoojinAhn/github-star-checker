@@ -20,9 +20,7 @@ GitHub Actions 워크플로우로 소유한 모든 레포지토리의 스타 수
 
 ## 준비물
 
-- GitHub 계정
 - Gmail 계정 ([2단계 인증](https://myaccount.google.com/security) 활성화 필요)
-- (선택) [GitHub CLI](https://cli.github.com/) — 터미널에서 시크릿 등록 시 사용; 웹 UI로도 가능
 
 ## 빠른 시작 (Fork)
 
