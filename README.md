@@ -4,6 +4,8 @@
 
 A GitHub Actions workflow that monitors star counts across all your repositories and sends an email notification when stars increase.
 
+> **0 dependencies · GitHub Actions only · Single workflow file**
+
 ## How It Works
 
 1. Runs every 30 minutes (or manually via `workflow_dispatch`)
