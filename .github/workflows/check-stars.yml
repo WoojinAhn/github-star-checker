@@ -63,6 +63,7 @@ jobs:
 
             // Output changes for email step
             if (!isFirstRun && changes.length > 0) {
+              const totalStars = Object.values(current).reduce((sum, s) => sum + s, 0);
               const subject = `⭐ GitHub Star Alert: ${changes.length} repo(s) gained stars!`;
               const body = changes
                 .map(c => `- ${c.repo}: ${c.prev} → ${c.current} (+${c.diff})`)
@@ -70,7 +71,7 @@ jobs:
               const checkedAt = new Date().toISOString();
               core.setOutput('has_changes', 'true');
               core.setOutput('subject', subject);
-              core.setOutput('body', `${body}\n\nChecked at: ${checkedAt}`);
+              core.setOutput('body', `${body}\n\nTotal stars: ${totalStars}\nChecked at: ${checkedAt}`);
             } else {
               core.setOutput('has_changes', 'false');
               if (isFirstRun) core.info('First run — skipping notifications.');
