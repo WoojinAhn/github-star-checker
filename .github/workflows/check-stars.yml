@@ -24,8 +24,8 @@ jobs:
           script: |
             const fs = require('fs');
             const token = process.env.STAR_MONITOR_TOKEN;
-            const { Octokit } = require('@octokit/rest');
-            const starOctokit = new Octokit({ auth: token });
+            const { getOctokit } = require('@actions/github');
+            const starOctokit = getOctokit(token);
 
             // Fetch all owned repos with pagination
             const repos = await starOctokit.paginate(starOctokit.rest.repos.listForAuthenticatedUser, {
