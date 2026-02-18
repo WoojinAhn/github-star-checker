@@ -20,7 +20,8 @@ No local clone is required. All logic runs on GitHub Actions. Setup and configur
 
 ## Prerequisites
 
-- Gmail account with [2-Step Verification](https://myaccount.google.com/security) enabled
+- [Classic Personal Access Token](https://github.com/settings/tokens/new) with `repo` and `workflow` scopes
+- Gmail account with [2-Step Verification](https://myaccount.google.com/security) enabled + [App Password](https://myaccount.google.com/apppasswords)
 
 ## Quick Start (Fork)
 
