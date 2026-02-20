@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-GitHub Actions 워크플로우로 소유한 공개(public) 레포지토리의 스타 수를 모니터링하고, 스타 변화(증가/감소)가 감지되면 Gmail로 이메일 알림을 보냅니다. Private 및 Fork 레포는 제외됩니다.
+GitHub Actions 워크플로우로 소유한 공개(public) 레포지토리의 스타 수를 모니터링하고, 스타 변화(증가/감소)가 감지되면 GitHub Issue(기본) 또는 Gmail로 알림을 보냅니다. Private 및 Fork 레포는 제외됩니다.
 
 > **의존성 0개 · GitHub Actions만 사용 · 워크플로우 파일 하나**
 
@@ -11,7 +11,7 @@ GitHub Actions 워크플로우로 소유한 공개(public) 레포지토리의 �
 1. 기본 1시간마다 자동 실행 (`workflow_dispatch`로 간격 변경 가능)
 2. 인증된 사용자가 소유한 공개, 비포크(non-fork) 레포지토리의 스타 수를 조회
 3. `stars.json`에 기록된 이전 수치와 비교
-4. 스타 변화(증가/감소)가 있는 레포 목록을 Gmail SMTP로 이메일 발송
+4. 스타 변화 알림 — GitHub Issue 생성(기본) 또는 Gmail SMTP 이메일 발송, `workflow_dispatch`로 변경 가능
 5. 갱신된 `stars.json`을 커밋하여 레포지토리에 반영
 
 첫 실행 시에는 현재 스타 수만 기록하고 알림을 발송하지 않습니다.
@@ -24,13 +24,13 @@ GitHub Actions 워크플로우로 소유한 공개(public) 레포지토리의 �
 
 - [Classic Personal Access Token](https://github.com/settings/tokens/new) (`repo` + `workflow` 스코프) (예: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`)
   > GitHub Actions가 기본 제공하는 `GITHUB_TOKEN`은 현재 레포지토리만 접근할 수 있으므로, 전체 레포지토리 목록 조회를 위해 별도 PAT이 필요합니다.
-- Gmail 계정 ([2단계 인증](https://myaccount.google.com/security) 활성화 필요) + [앱 비밀번호](https://myaccount.google.com/apppasswords) (예: `abcd efgh ijkl mnop`)
+- *(선택, `gmail` 또는 `both` 알림 채널 사용 시)* Gmail 계정 ([2단계 인증](https://myaccount.google.com/security) 활성화 필요) + [앱 비밀번호](https://myaccount.google.com/apppasswords) (예: `abcd efgh ijkl mnop`)
 
 ## 빠른 시작 (Fork)
 
 1. 이 레포지토리를 Fork
 2. **Actions** 탭에서 워크플로우 활성화 (Fork는 기본 비활성)
-3. **Settings > Secrets and variables > Actions**에서 아래 시크릿 4개 등록
+3. **Settings > Secrets and variables > Actions**에서 `STAR_MONITOR_TOKEN` 등록 (Gmail 시크릿은 `gmail` 또는 `both` 알림 채널 사용 시에만 필요)
 4. Actions 탭에서 수동 실행하거나, 다음 스케줄 실행을 대기
 
 ## 레포지토리 시크릿
@@ -40,9 +40,9 @@ GitHub Actions 워크플로우로 소유한 공개(public) 레포지토리의 �
 | 시크릿 | 값 |
 |--------|-----|
 | `STAR_MONITOR_TOKEN` | Classic PAT |
-| `GMAIL_USER` | 발송용 Gmail 주소 |
-| `GMAIL_APP_PASSWORD` | Gmail 앱 비밀번호 |
-| `NOTIFY_EMAIL` | 알림 수신 이메일 주소 |
+| `GMAIL_USER` | 발송용 Gmail 주소 *(선택)* |
+| `GMAIL_APP_PASSWORD` | Gmail 앱 비밀번호 *(선택)* |
+| `NOTIFY_EMAIL` | 알림 수신 이메일 주소 *(선택)* |
 
 또는 [GitHub CLI](https://cli.github.com/)로 등록:
 

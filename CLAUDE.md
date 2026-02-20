@@ -10,7 +10,7 @@ GitHub star monitoring tool that runs as a GitHub Actions workflow. Every hour b
 
 - **Single workflow**: `.github/workflows/check-stars.yml` — contains all logic inline via `actions/github-script@v7`
 - **Data store**: `stars.json` — persisted via git commit by the workflow itself
-- **Notifications**: Star increases create Issues in this repository with the `star-notification` label
+- **Notifications**: Configurable via `NOTIFICATION_CHANNEL` env — `issue` (default), `gmail`, or `both`. Changeable via `workflow_dispatch`. Issues use the `star-notification` label
 - First run initializes `stars.json` without creating notifications
 
 ## Secrets
