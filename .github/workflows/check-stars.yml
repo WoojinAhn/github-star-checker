@@ -27,6 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.STAR_MONITOR_TOKEN }}
 
       - name: Update schedule
         if: inputs.schedule != ''
@@ -143,8 +145,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase -X theirs || true
           git add stars.json .github/workflows/check-stars.yml
+          git pull --rebase -X theirs || true
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           if [ "${{ steps.schedule.outputs.updated }}" = "true" ]; then
             git commit -m "chore: update stars.json and check interval to ${{ inputs.schedule }}"
