@@ -42,7 +42,7 @@ jobs:
             "12 hours")   CRON="0 */12 * * *" ;;
             "24 hours")   CRON="0 0 * * *" ;;
           esac
-          sed -i "s|    - cron: '.*'|    - cron: '${CRON}'|" .github/workflows/check-stars.yml
+          sed -i "s|    - cron: '0 * * * *'|" .github/workflows/check-stars.yml
           echo "updated=true" >> "$GITHUB_OUTPUT"
           echo "Updated schedule to: ${{ inputs.schedule }} (${CRON})"
 
