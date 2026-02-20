@@ -12,7 +12,8 @@ A GitHub Actions workflow that monitors star counts across your public, non-fork
 2. Fetches star counts for all public, non-fork repositories owned by the authenticated user
 3. Compares with previously recorded counts in `stars.json`
 4. Notifies about star changes — creates a GitHub Issue (default) or sends an email via Gmail SMTP, configurable via `workflow_dispatch`
-5. Commits the updated `stars.json` back to the repository
+5. Generates weekly (Monday) and monthly (1st) star reports automatically
+6. Commits the updated `stars.json` back to the repository
 
 On the first run, it records the current star counts without sending notifications.
 
@@ -78,4 +79,5 @@ GitHub Actions free tier provides 2,000 minutes/month. This workflow takes ~10 s
 ```
 .github/workflows/check-stars.yml  # Workflow definition (all logic is inline)
 stars.json                          # Star count snapshot (auto-updated by the workflow)
+stars-history.json                  # Daily snapshots for reports (last 32 days)
 ```

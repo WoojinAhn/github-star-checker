@@ -12,7 +12,8 @@ GitHub Actions 워크플로우로 소유한 공개(public) 레포지토리의 �
 2. 인증된 사용자가 소유한 공개, 비포크(non-fork) 레포지토리의 스타 수를 조회
 3. `stars.json`에 기록된 이전 수치와 비교
 4. 스타 변화 알림 — GitHub Issue 생성(기본) 또는 Gmail SMTP 이메일 발송, `workflow_dispatch`로 변경 가능
-5. 갱신된 `stars.json`을 커밋하여 레포지토리에 반영
+5. 주간(월요일) / 월간(매월 1일) 스타 리포트 자동 생성
+6. 갱신된 `stars.json`을 커밋하여 레포지토리에 반영
 
 첫 실행 시에는 현재 스타 수만 기록하고 알림을 발송하지 않습니다.
 
@@ -78,4 +79,5 @@ GitHub Actions 무료 티어는 월 2,000분을 제공합니다. 이 워크플�
 ```
 .github/workflows/check-stars.yml  # 워크플로우 정의 (모든 로직이 인라인으로 포함)
 stars.json                          # 스타 수 스냅샷 (워크플로우가 자동 갱신)
+stars-history.json                  # 일별 스냅샷 (리포트용, 최근 32일 보관)
 ```

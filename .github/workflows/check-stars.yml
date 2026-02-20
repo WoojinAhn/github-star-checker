@@ -28,6 +28,15 @@ on:
           - 'issue'
           - 'gmail'
           - 'both'
+      report:
+        description: 'Generate a report manually'
+        required: false
+        type: choice
+        default: ''
+        options:
+          - ''
+          - 'weekly'
+          - 'monthly'
 
 permissions:
   contents: write
@@ -58,12 +67,12 @@ jobs:
               "12 hours")   CRON="0 */12 * * *" ;;
               "24 hours")   CRON="0 0 * * *" ;;
             esac
-            sed -i "s|    - cron: '0 * * * *'|" .github/workflows/check-stars.yml
+            sed -i "s|^    - cron: '.*'|    - cron: '${CRON}'|" .github/workflows/check-stars.yml
             CHANGES="schedule=${{ inputs.schedule }}"
             echo "Updated schedule to: ${{ inputs.schedule }} (${CRON})"
           fi
           if [ -n "${{ inputs.notification }}" ]; then
-            sed -i "s|NOTIFICATION_CHANNEL: gmail  # issue | gmail | both
+            sed -i "s|^  NOTIFICATION_CHANNEL: .*|  NOTIFICATION_CHANNEL: ${{ inputs.notification }}  # issue \| gmail \| both|" .github/workflows/check-stars.yml
             [ -n "$CHANGES" ] && CHANGES="$CHANGES, "
             CHANGES="${CHANGES}notification=${{ inputs.notification }}"
             echo "Updated notification channel to: ${{ inputs.notification }}"
@@ -118,7 +127,7 @@ jobs:
               }
             }
 
-            // Output changes for email step
+            // Output changes for notification steps
             if (!isFirstRun && changes.length > 0) {
               const totalStars = Object.values(current).reduce((sum, s) => sum + s, 0);
               const gains = changes.filter(c => c.diff > 0);
@@ -152,7 +161,96 @@ jobs:
             fs.writeFileSync(dataPath, JSON.stringify(data, null, 2) + '\n');
             core.info(`Updated stars.json with ${Object.keys(current).length} repos.`);
 
-      - name: Create GitHub Issue
+            // Save daily snapshot to history
+            const historyPath = 'stars-history.json';
+            let history = {};
+            try {
+              history = JSON.parse(fs.readFileSync(historyPath, 'utf8'));
+            } catch {}
+
+            const today = new Date().toISOString().slice(0, 10);
+            history[today] = current;
+
+            // Prune entries older than 32 days
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - 32);
+            const cutoffStr = cutoff.toISOString().slice(0, 10);
+            for (const date of Object.keys(history)) {
+              if (date < cutoffStr) delete history[date];
+            }
+
+            fs.writeFileSync(historyPath, JSON.stringify(history, null, 2) + '\n');
+            core.info(`Updated stars-history.json (${Object.keys(history).length} day(s) stored).`);
+
+            // Generate weekly/monthly report
+            const now = new Date();
+            const manualReport = '${{ inputs.report }}';
+            const isWeekly = manualReport === 'weekly' || (now.getUTCDay() === 1 && now.getUTCHours() === 0);
+            const isMonthly = manualReport === 'monthly' || (now.getUTCDate() === 1 && now.getUTCHours() === 0);
+
+            if (isWeekly || isMonthly) {
+              const periodDays = isMonthly ? 30 : 7;
+              const periodLabel = isMonthly ? 'Monthly' : 'Weekly';
+              const startDate = new Date();
+              startDate.setDate(startDate.getDate() - periodDays);
+              const startStr = startDate.toISOString().slice(0, 10);
+
+              // Find closest available snapshot to start date
+              const dates = Object.keys(history).sort();
+              const startSnapshot = dates.find(d => d >= startStr);
+
+              if (startSnapshot) {
+                const oldData = history[startSnapshot];
+                const totalNow = Object.values(current).reduce((s, v) => s + v, 0);
+                const totalThen = Object.values(oldData).reduce((s, v) => s + v, 0);
+                const totalDiff = totalNow - totalThen;
+
+                const reportLines = [];
+                reportLines.push(`📊 **${periodLabel} Summary** (${startSnapshot} ~ ${today})`);
+                reportLines.push('');
+                reportLines.push(`Total stars: ${totalThen} → ${totalNow} (${totalDiff >= 0 ? '+' : ''}${totalDiff})`);
+                reportLines.push('');
+
+                const repoChanges = [];
+                for (const [repo, stars] of Object.entries(current)) {
+                  const old = oldData[repo] ?? 0;
+                  const diff = stars - old;
+                  if (diff !== 0) repoChanges.push({ repo, old, stars, diff });
+                }
+
+                if (repoChanges.length > 0) {
+                  const gained = repoChanges.filter(c => c.diff > 0);
+                  const lost = repoChanges.filter(c => c.diff < 0);
+                  if (gained.length > 0) {
+                    reportLines.push('⬆️ Gained:');
+                    reportLines.push(...gained.map(c => `- ${c.repo}: ${c.old} → ${c.stars} (+${c.diff})`));
+                    reportLines.push('');
+                  }
+                  if (lost.length > 0) {
+                    reportLines.push('⬇️ Lost:');
+                    reportLines.push(...lost.map(c => `- ${c.repo}: ${c.old} → ${c.stars} (${c.diff})`));
+                    reportLines.push('');
+                  }
+                } else {
+                  reportLines.push('No changes during this period.');
+                }
+
+                const unchanged = Object.keys(current).length - repoChanges.length;
+                if (unchanged > 0) reportLines.push(`📦 ${unchanged} repo(s) unchanged.`);
+
+                core.setOutput('has_report', 'true');
+                core.setOutput('report_subject', `⭐ ${periodLabel} Star Report (${startSnapshot} ~ ${today})`);
+                core.setOutput('report_body', reportLines.join('\n'));
+                core.info(`Generated ${periodLabel.toLowerCase()} report.`);
+              } else {
+                core.info('Not enough history data for report yet.');
+                core.setOutput('has_report', 'false');
+              }
+            } else {
+              core.setOutput('has_report', 'false');
+            }
+
+      - name: Create GitHub Issue (alert)
         if: steps.check.outputs.has_changes == 'true' && (env.NOTIFICATION_CHANNEL == 'issue' || env.NOTIFICATION_CHANNEL == 'both')
         uses: actions/github-script@v7
         env:
@@ -168,7 +266,7 @@ jobs:
               labels: ['star-notification'],
             });
 
-      - name: Send email notification
+      - name: Send email notification (alert)
         if: steps.check.outputs.has_changes == 'true' && (env.NOTIFICATION_CHANNEL == 'gmail' || env.NOTIFICATION_CHANNEL == 'both')
         uses: dawidd6/action-send-mail@v3
         with:
@@ -182,6 +280,36 @@ jobs:
           from: GitHub Star Checker <${{ secrets.GMAIL_USER }}>
           to: ${{ secrets.NOTIFY_EMAIL }}
 
+      - name: Create GitHub Issue (report)
+        if: steps.check.outputs.has_report == 'true' && (env.NOTIFICATION_CHANNEL == 'issue' || env.NOTIFICATION_CHANNEL == 'both')
+        uses: actions/github-script@v7
+        env:
+          ISSUE_TITLE: ${{ steps.check.outputs.report_subject }}
+          ISSUE_BODY: ${{ steps.check.outputs.report_body }}
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: process.env.ISSUE_TITLE,
+              body: process.env.ISSUE_BODY,
+              labels: ['star-report'],
+            });
+
+      - name: Send email notification (report)
+        if: steps.check.outputs.has_report == 'true' && (env.NOTIFICATION_CHANNEL == 'gmail' || env.NOTIFICATION_CHANNEL == 'both')
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: ${{ steps.check.outputs.report_subject }}
+          body: ${{ steps.check.outputs.report_body }}
+          from: GitHub Star Checker <${{ secrets.GMAIL_USER }}>
+          to: ${{ secrets.NOTIFY_EMAIL }}
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
@@ -189,7 +317,7 @@ jobs:
           git stash --include-untracked
           git pull --rebase || true
           git stash pop || true
-          git add stars.json .github/workflows/check-stars.yml
+          git add stars.json stars-history.json .github/workflows/check-stars.yml
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           if [ "${{ steps.settings.outputs.updated }}" = "true" ]; then
             git commit -m "chore: update stars.json and settings (${{ steps.settings.outputs.changes }})"
