@@ -34,7 +34,7 @@ permissions:
   issues: write
 
 env:
-  NOTIFICATION_CHANNEL: issue  # issue | gmail | both
+  NOTIFICATION_CHANNEL: gmail  # issue | gmail | both
 
 jobs:
   check-stars:
@@ -58,12 +58,12 @@ jobs:
               "12 hours")   CRON="0 */12 * * *" ;;
               "24 hours")   CRON="0 0 * * *" ;;
             esac
-            sed -i "s|    - cron: '.*'|    - cron: '${CRON}'|" .github/workflows/check-stars.yml
+            sed -i "s|    - cron: '0 * * * *'|" .github/workflows/check-stars.yml
             CHANGES="schedule=${{ inputs.schedule }}"
             echo "Updated schedule to: ${{ inputs.schedule }} (${CRON})"
           fi
           if [ -n "${{ inputs.notification }}" ]; then
-            sed -i "s|NOTIFICATION_CHANNEL: .*|NOTIFICATION_CHANNEL: ${{ inputs.notification }}  # issue \| gmail \| both|" .github/workflows/check-stars.yml
+            sed -i "s|NOTIFICATION_CHANNEL: gmail  # issue | gmail | both
             [ -n "$CHANGES" ] && CHANGES="$CHANGES, "
             CHANGES="${CHANGES}notification=${{ inputs.notification }}"
             echo "Updated notification channel to: ${{ inputs.notification }}"
