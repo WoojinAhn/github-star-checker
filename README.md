@@ -8,7 +8,7 @@ A GitHub Actions workflow that monitors star counts across your public, non-fork
 
 ## How It Works
 
-1. Runs every 30 minutes (or manually via `workflow_dispatch`)
+1. Runs every hour by default (configurable via `workflow_dispatch`)
 2. Fetches star counts for all public, non-fork repositories owned by the authenticated user
 3. Compares with previously recorded counts in `stars.json`
 4. Sends an email via Gmail SMTP listing repos with star changes — both gains and losses
@@ -71,7 +71,7 @@ Checked at: 2026-02-18T12:13:19Z
 
 ## Limits
 
-GitHub Actions free tier provides 2,000 minutes/month. This workflow takes ~10 seconds per run, so running every 30 minutes uses ~150 minutes/month.
+GitHub Actions free tier provides 2,000 minutes/month. This workflow takes ~10 seconds per run, so running every hour (default) uses ~75 minutes/month. You can change the interval from the Actions tab via `workflow_dispatch`.
 
 ## File Structure
 

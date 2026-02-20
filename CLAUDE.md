@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-GitHub star monitoring tool that runs as a GitHub Actions workflow. Every 30 minutes, it checks star counts on all repositories owned by the authenticated user, records them in `stars.json`, and creates GitHub Issues when star increases are detected.
+GitHub star monitoring tool that runs as a GitHub Actions workflow. Every hour by default (configurable via `workflow_dispatch`), it checks star counts on all repositories owned by the authenticated user, records them in `stars.json`, and creates GitHub Issues when star increases are detected.
 
 ## Architecture
 
