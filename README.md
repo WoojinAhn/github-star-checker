@@ -43,16 +43,11 @@ No local clone is required. All logic runs on GitHub Actions. Setup and configur
 3. Register `STAR_MONITOR_TOKEN` in **Settings > Secrets and variables > Actions** (Gmail secrets only needed if using `gmail` or `both` notification channel)
 4. Run the workflow manually from the Actions tab, or wait for the next scheduled run
 
-<details>
-<summary>Manual trigger options</summary>
-
 <table><tr><td>
 <img src=".github/assets/screenshot-workflow-dispatch.png" alt="Workflow dispatch UI" width="600">
 </td></tr></table>
 
-You can change the check interval, notification channel, and generate reports manually.
-
-</details>
+You can change the check interval, notification channel, and generate reports manually from the Actions tab.
 
 ## Repository Secrets
 

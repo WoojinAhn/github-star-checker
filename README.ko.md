@@ -43,16 +43,11 @@ flowchart LR
 3. **Settings > Secrets and variables > Actions**에서 `STAR_MONITOR_TOKEN` 등록 (Gmail 시크릿은 `gmail` 또는 `both` 알림 채널 사용 시에만 필요)
 4. Actions 탭에서 수동 실행하거나, 다음 스케줄 실행을 대기
 
-<details>
-<summary>수동 실행 옵션</summary>
-
 <table><tr><td>
 <img src=".github/assets/screenshot-workflow-dispatch.png" alt="Workflow dispatch UI" width="600">
 </td></tr></table>
 
-체크 간격, 알림 채널 변경, 리포트 수동 생성이 가능합니다.
-
-</details>
+Actions 탭에서 체크 간격, 알림 채널 변경, 리포트 수동 생성이 가능합니다.
 
 ## 레포지토리 시크릿
 
