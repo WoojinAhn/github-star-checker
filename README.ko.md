@@ -46,9 +46,9 @@ flowchart LR
 <details>
 <summary>수동 실행 옵션</summary>
 
-![Workflow dispatch UI](.github/assets/screenshot-workflow-dispatch.png)
-
-<!-- 스크린샷: Actions 탭 > "Run workflow" 드롭다운 (schedule, notification, report 옵션) -->
+<table><tr><td>
+<img src=".github/assets/screenshot-workflow-dispatch.png" alt="Workflow dispatch UI" width="600">
+</td></tr></table>
 
 체크 간격, 알림 채널 변경, 리포트 수동 생성이 가능합니다.
 
@@ -78,15 +78,15 @@ gh secret set NOTIFY_EMAIL
 
 ### GitHub Issue
 
-![Star notification issue](.github/assets/screenshot-issue-alert.png)
-
-<!-- 스크린샷: "⭐ ...got 1 new star(s)!" 제목의 star-notification 라벨 Issue -->
+<table><tr><td>
+<img src=".github/assets/screenshot-issue-alert.png" alt="Star notification issue" width="600">
+</td></tr></table>
 
 ### 이메일
 
-![Star notification email](.github/assets/screenshot-email-alert.png)
-
-<!-- 스크린샷: Gmail 수신함의 스타 알림 이메일 -->
+<table><tr><td>
+<img src=".github/assets/screenshot-email-alert.png" alt="Star notification email" width="600">
+</td></tr></table>
 
 ```
 제목: ⭐ GitHub Star Alert: 3 repo(s) changed!
@@ -104,9 +104,9 @@ Checked at: 2026-02-18T12:13:19Z
 
 ### 주간 / 월간 리포트
 
-![Weekly report issue](.github/assets/screenshot-weekly-report.png)
-
-<!-- 스크린샷: star-report 라벨의 주간/월간 요약 Issue -->
+<table><tr><td>
+<img src=".github/assets/screenshot-weekly-report.png" alt="Weekly report issue" width="600">
+</td></tr></table>
 
 ## 제한 사항
 

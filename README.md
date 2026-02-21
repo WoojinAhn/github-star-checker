@@ -46,9 +46,9 @@ No local clone is required. All logic runs on GitHub Actions. Setup and configur
 <details>
 <summary>Manual trigger options</summary>
 
-![Workflow dispatch UI](.github/assets/screenshot-workflow-dispatch.png)
-
-<!-- screenshot: Actions tab > "Run workflow" dropdown showing schedule, notification, and report options -->
+<table><tr><td>
+<img src=".github/assets/screenshot-workflow-dispatch.png" alt="Workflow dispatch UI" width="600">
+</td></tr></table>
 
 You can change the check interval, notification channel, and generate reports manually.
 
@@ -78,15 +78,15 @@ gh secret set NOTIFY_EMAIL
 
 ### GitHub Issue
 
-![Star notification issue](.github/assets/screenshot-issue-alert.png)
-
-<!-- screenshot: GitHub Issue with title "⭐ ...got 1 new star(s)!" and star-notification label -->
+<table><tr><td>
+<img src=".github/assets/screenshot-issue-alert.png" alt="Star notification issue" width="600">
+</td></tr></table>
 
 ### Email
 
-![Star notification email](.github/assets/screenshot-email-alert.png)
-
-<!-- screenshot: Gmail inbox showing star alert email -->
+<table><tr><td>
+<img src=".github/assets/screenshot-email-alert.png" alt="Star notification email" width="600">
+</td></tr></table>
 
 ```
 Subject: ⭐ GitHub Star Alert: 3 repo(s) changed!
@@ -104,9 +104,9 @@ Checked at: 2026-02-18T12:13:19Z
 
 ### Weekly / Monthly Report
 
-![Weekly report issue](.github/assets/screenshot-weekly-report.png)
-
-<!-- screenshot: GitHub Issue with star-report label showing weekly/monthly summary -->
+<table><tr><td>
+<img src=".github/assets/screenshot-weekly-report.png" alt="Weekly report issue" width="600">
+</td></tr></table>
 
 ## Limits
 
