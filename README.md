@@ -2,7 +2,7 @@
 
 [한국어](README.ko.md)
 
-A GitHub Actions workflow that monitors star counts across your public, non-fork repositories and notifies you when stars change — via GitHub Issues (default) or Gmail SMTP.
+Monitor GitHub stars across all your repositories — automatically. Get notified via GitHub Issues or Gmail whenever stars change.
 
 > **0 dependencies · GitHub Actions only · Single workflow file**
 
@@ -18,55 +18,48 @@ flowchart LR
 ```
 
 1. Runs every hour by default (configurable via `workflow_dispatch`)
-2. Fetches star counts for all public, non-fork repositories owned by the authenticated user
-3. Compares with previously recorded counts in `stars.json`
-4. Notifies about star changes — creates a GitHub Issue (default) or sends an email via Gmail SMTP, configurable via `workflow_dispatch`
-5. Generates weekly (Monday) and monthly (1st) star reports automatically
-6. Commits the updated `stars.json` back to the repository
+2. Fetches star counts for all public, non-fork repositories you own
+3. Compares with previous counts stored in `stars.json`
+4. Sends notifications on changes — GitHub Issue (default) or Gmail, switchable via `workflow_dispatch`
+5. Generates weekly (Monday) and monthly (1st) star reports
+6. Commits updated `stars.json` back to the repository
 
-On the first run, it records the current star counts without sending notifications.
+On the first run, it only records current counts — no notifications are sent.
 
-## Note
+## Quick Start
 
-No local clone is required. All logic runs on GitHub Actions. Setup and configuration can be done entirely through the GitHub web UI.
+No local setup needed. Everything runs on GitHub Actions.
 
-## Prerequisites
-
-- [Classic Personal Access Token](https://github.com/settings/tokens/new) with `repo` and `workflow` scopes (e.g. `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`)
-  > The default `GITHUB_TOKEN` provided by GitHub Actions can only access the current repository. A separate PAT is required to list all owned repositories.
-- *(Optional, only for `gmail` or `both` notification channel)* Gmail account with [2-Step Verification](https://myaccount.google.com/security) enabled + [App Password](https://myaccount.google.com/apppasswords) (e.g. `abcd efgh ijkl mnop`)
-
-## Quick Start (Fork)
-
-1. Fork this repository
-2. Go to the **Actions** tab and enable workflows (disabled by default on forks)
-3. Register `STAR_MONITOR_TOKEN` in **Settings > Secrets and variables > Actions** (Gmail secrets only needed if using `gmail` or `both` notification channel)
-4. Run the workflow manually from the Actions tab, or wait for the next scheduled run
+1. **Fork** this repository
+2. **Enable workflows** in the Actions tab (disabled by default on forks)
+3. **Add secret** `STAR_MONITOR_TOKEN` in Settings > Secrets and variables > Actions
+4. **Run** the workflow manually, or wait for the next scheduled run
 
 <table><tr><td>
 <img src=".github/assets/screenshot-workflow-dispatch.png" alt="Workflow dispatch UI" width="600">
 </td></tr></table>
 
-You can change the check interval, notification channel, and generate reports manually from the Actions tab.
+You can change the check interval, notification channel, and trigger reports manually from the Actions tab.
 
-## Repository Secrets
+## Prerequisites
 
-Register the following secrets with the values prepared above:
+- [Classic Personal Access Token](https://github.com/settings/tokens/new) with `repo` + `workflow` scopes
+  > The default `GITHUB_TOKEN` can only access the current repository. A separate PAT is needed to list all your repositories.
+- *(Optional)* Gmail with [2-Step Verification](https://myaccount.google.com/security) + [App Password](https://myaccount.google.com/apppasswords) — only for `gmail` or `both` notification channel
 
-| Secret | Value |
-|--------|-------|
-| `STAR_MONITOR_TOKEN` | Classic PAT |
-| `GMAIL_USER` | Gmail address for sending *(optional)* |
-| `GMAIL_APP_PASSWORD` | Gmail app password *(optional)* |
-| `NOTIFY_EMAIL` | Email address to receive notifications *(optional)* |
+## Secrets
+
+| Secret | Value | Required |
+|--------|-------|----------|
+| `STAR_MONITOR_TOKEN` | Classic PAT | Yes |
+| `GMAIL_USER` | Gmail address for sending | Only for Gmail |
+| `GMAIL_APP_PASSWORD` | Gmail app password | Only for Gmail |
+| `NOTIFY_EMAIL` | Email address to receive notifications | Only for Gmail |
 
 Or via [GitHub CLI](https://cli.github.com/):
 
 ```sh
 gh secret set STAR_MONITOR_TOKEN
-gh secret set GMAIL_USER
-gh secret set GMAIL_APP_PASSWORD
-gh secret set NOTIFY_EMAIL
 ```
 
 ## Notification Examples
@@ -103,14 +96,14 @@ Checked at: 2026-02-18T12:13:19Z
 <img src=".github/assets/screenshot-weekly-report.png" alt="Weekly report issue" width="600">
 </td></tr></table>
 
-## Limits
+## Usage & Limits
 
-GitHub Actions free tier provides 2,000 minutes/month. This workflow takes ~10 seconds per run, so running every hour (default) uses ~75 minutes/month. You can change the interval from the Actions tab via `workflow_dispatch`.
+GitHub Actions free tier provides 2,000 minutes/month. This workflow takes ~10 seconds per run, so the default hourly schedule uses ~75 minutes/month.
 
 ## File Structure
 
 ```
-.github/workflows/check-stars.yml  # Workflow definition (all logic is inline)
-stars.json                          # Star count snapshot (auto-updated by the workflow)
-stars-history.json                  # Daily snapshots for reports (last 32 days)
+.github/workflows/check-stars.yml  # Workflow (all logic inline)
+stars.json                          # Latest star counts (auto-updated)
+stars-history.json                  # Daily snapshots for reports (32-day retention)
 ```
