@@ -43,7 +43,7 @@ permissions:
   issues: write
 
 env:
-  NOTIFICATION_CHANNEL: gmail  # issue | gmail | both
+  NOTIFICATION_CHANNEL: issue  # issue | gmail | both
 
 jobs:
   check-stars:
