@@ -28,7 +28,7 @@ On the first run, it only records current counts — no notifications are sent.
 
 ## Quick Start
 
-No local setup needed. Everything runs on GitHub Actions.
+No local setup needed. Everything runs on GitHub Actions in its own forked repo — your existing repositories stay untouched.
 
 1. **Fork** this repository
 2. **Enable workflows** in the Actions tab (disabled by default on forks)

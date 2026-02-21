@@ -28,7 +28,7 @@ flowchart LR
 
 ## 빠른 시작
 
-로컬 설치 없이 GitHub Actions에서 모두 동작합니다.
+로컬 설치 없이 GitHub Actions에서 모두 동작합니다. Fork한 전용 레포에서 실행되므로 기존 레포지토리에 영향을 주지 않습니다.
 
 1. **Fork** — 이 레포지토리를 Fork
 2. **워크플로우 활성화** — Actions 탭에서 활성화 (Fork는 기본 비활성)
