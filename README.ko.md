@@ -8,6 +8,15 @@ GitHub Actions 워크플로우로 소유한 공개(public) 레포지토리의 �
 
 ## 동작 방식
 
+```mermaid
+flowchart LR
+    A["⏰ Cron (hourly)"] --> B["Fetch star counts\nfor all repos"]
+    B --> C{"Stars\nchanged?"}
+    C -->|Yes| D["🔔 Notify\n(Issue / Gmail)"]
+    C -->|No| E["💾 Commit\nstars.json"]
+    D --> E
+```
+
 1. 기본 1시간마다 자동 실행 (`workflow_dispatch`로 간격 변경 가능)
 2. 인증된 사용자가 소유한 공개, 비포크(non-fork) 레포지토리의 스타 수를 조회
 3. `stars.json`에 기록된 이전 수치와 비교
@@ -34,6 +43,17 @@ GitHub Actions 워크플로우로 소유한 공개(public) 레포지토리의 �
 3. **Settings > Secrets and variables > Actions**에서 `STAR_MONITOR_TOKEN` 등록 (Gmail 시크릿은 `gmail` 또는 `both` 알림 채널 사용 시에만 필요)
 4. Actions 탭에서 수동 실행하거나, 다음 스케줄 실행을 대기
 
+<details>
+<summary>수동 실행 옵션</summary>
+
+![Workflow dispatch UI](.github/assets/screenshot-workflow-dispatch.png)
+
+<!-- 스크린샷: Actions 탭 > "Run workflow" 드롭다운 (schedule, notification, report 옵션) -->
+
+체크 간격, 알림 채널 변경, 리포트 수동 생성이 가능합니다.
+
+</details>
+
 ## 레포지토리 시크릿
 
 위에서 준비한 값으로 아래 시크릿을 등록:
@@ -54,7 +74,19 @@ gh secret set GMAIL_APP_PASSWORD
 gh secret set NOTIFY_EMAIL
 ```
 
-## 이메일 예시
+## 알림 예시
+
+### GitHub Issue
+
+![Star notification issue](.github/assets/screenshot-issue-alert.png)
+
+<!-- 스크린샷: "⭐ ...got 1 new star(s)!" 제목의 star-notification 라벨 Issue -->
+
+### 이메일
+
+![Star notification email](.github/assets/screenshot-email-alert.png)
+
+<!-- 스크린샷: Gmail 수신함의 스타 알림 이메일 -->
 
 ```
 제목: ⭐ GitHub Star Alert: 3 repo(s) changed!
@@ -69,6 +101,12 @@ gh secret set NOTIFY_EMAIL
 Total stars: 42
 Checked at: 2026-02-18T12:13:19Z
 ```
+
+### 주간 / 월간 리포트
+
+![Weekly report issue](.github/assets/screenshot-weekly-report.png)
+
+<!-- 스크린샷: star-report 라벨의 주간/월간 요약 Issue -->
 
 ## 제한 사항
 

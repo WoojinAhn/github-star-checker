@@ -8,6 +8,15 @@ A GitHub Actions workflow that monitors star counts across your public, non-fork
 
 ## How It Works
 
+```mermaid
+flowchart LR
+    A["⏰ Cron (hourly)"] --> B["Fetch star counts\nfor all repos"]
+    B --> C{"Stars\nchanged?"}
+    C -->|Yes| D["🔔 Notify\n(Issue / Gmail)"]
+    C -->|No| E["💾 Commit\nstars.json"]
+    D --> E
+```
+
 1. Runs every hour by default (configurable via `workflow_dispatch`)
 2. Fetches star counts for all public, non-fork repositories owned by the authenticated user
 3. Compares with previously recorded counts in `stars.json`
@@ -34,6 +43,17 @@ No local clone is required. All logic runs on GitHub Actions. Setup and configur
 3. Register `STAR_MONITOR_TOKEN` in **Settings > Secrets and variables > Actions** (Gmail secrets only needed if using `gmail` or `both` notification channel)
 4. Run the workflow manually from the Actions tab, or wait for the next scheduled run
 
+<details>
+<summary>Manual trigger options</summary>
+
+![Workflow dispatch UI](.github/assets/screenshot-workflow-dispatch.png)
+
+<!-- screenshot: Actions tab > "Run workflow" dropdown showing schedule, notification, and report options -->
+
+You can change the check interval, notification channel, and generate reports manually.
+
+</details>
+
 ## Repository Secrets
 
 Register the following secrets with the values prepared above:
@@ -54,7 +74,19 @@ gh secret set GMAIL_APP_PASSWORD
 gh secret set NOTIFY_EMAIL
 ```
 
-## Email Example
+## Notification Examples
+
+### GitHub Issue
+
+![Star notification issue](.github/assets/screenshot-issue-alert.png)
+
+<!-- screenshot: GitHub Issue with title "⭐ ...got 1 new star(s)!" and star-notification label -->
+
+### Email
+
+![Star notification email](.github/assets/screenshot-email-alert.png)
+
+<!-- screenshot: Gmail inbox showing star alert email -->
 
 ```
 Subject: ⭐ GitHub Star Alert: 3 repo(s) changed!
@@ -69,6 +101,12 @@ Subject: ⭐ GitHub Star Alert: 3 repo(s) changed!
 Total stars: 42
 Checked at: 2026-02-18T12:13:19Z
 ```
+
+### Weekly / Monthly Report
+
+![Weekly report issue](.github/assets/screenshot-weekly-report.png)
+
+<!-- screenshot: GitHub Issue with star-report label showing weekly/monthly summary -->
 
 ## Limits
 
