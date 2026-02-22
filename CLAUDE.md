@@ -14,9 +14,21 @@ GitHub star monitoring tool that runs as a GitHub Actions workflow. Every hour b
 - **Reports**: Weekly (Monday UTC 00:xx) and monthly (1st UTC 00:xx) star summary reports generated automatically. Can also be triggered manually via `workflow_dispatch` report input
 - First run initializes `stars.json` without creating notifications
 
+## Workflow Steps
+
+1. **Update settings** — if `schedule` or `notification` inputs are provided via `workflow_dispatch`, uses `sed` to mutate the workflow file itself (cron expression and `NOTIFICATION_CHANNEL` env) and commits the change
+2. **Check stars** — fetches all public, non-fork repos via `repos.listForAuthenticatedUser` (paginated), diffs against `stars.json`, outputs changes; also writes daily snapshot to `stars-history.json` and generates weekly/monthly reports if applicable
+3. **Notify** — creates a GitHub Issue and/or sends Gmail depending on `NOTIFICATION_CHANNEL`; separate steps for alerts vs. reports
+4. **Commit and push** — commits `stars.json`, `stars-history.json`, and the workflow file itself if any changed
+
 ## Secrets
 
-- `STAR_MONITOR_TOKEN` — GitHub PAT with repo access, used to list all owned repositories (the default `GITHUB_TOKEN` only sees the current repo)
+| Secret | Required | Purpose |
+|--------|----------|---------|
+| `STAR_MONITOR_TOKEN` | Always | Classic PAT (`repo` + `workflow` scopes) — needed to list all owned repos |
+| `GMAIL_USER` | Gmail only | Gmail address for sending |
+| `GMAIL_APP_PASSWORD` | Gmail only | Gmail App Password |
+| `NOTIFY_EMAIL` | Gmail only | Recipient address |
 
 ## Testing Locally
 
