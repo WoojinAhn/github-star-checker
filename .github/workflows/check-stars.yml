@@ -153,13 +153,13 @@ jobs:
               if (isFirstRun) core.info('First run — skipping notifications.');
             }
 
-            // Write updated data
+            // Build updated data (written after report logic)
             const data = {
               last_checked: new Date().toISOString(),
+              last_weekly_report: previous.last_weekly_report || null,
+              last_monthly_report: previous.last_monthly_report || null,
               repos: current,
             };
-            fs.writeFileSync(dataPath, JSON.stringify(data, null, 2) + '\n');
-            core.info(`Updated stars.json with ${Object.keys(current).length} repos.`);
 
             // Save daily snapshot to history
             const historyPath = 'stars-history.json';
@@ -185,8 +185,15 @@ jobs:
             // Generate weekly/monthly report
             const now = new Date();
             const manualReport = '${{ inputs.report }}';
-            const isWeekly = manualReport === 'weekly' || (now.getUTCDay() === 1 && now.getUTCHours() === 0);
-            const isMonthly = manualReport === 'monthly' || (now.getUTCDate() === 1 && now.getUTCHours() === 0);
+
+            // Use date-based dedup instead of hour check (GitHub Actions cron delays skip exact hours)
+            const mondayOfThisWeek = new Date(now);
+            mondayOfThisWeek.setUTCDate(now.getUTCDate() - ((now.getUTCDay() + 6) % 7));
+            const mondayStr = mondayOfThisWeek.toISOString().slice(0, 10);
+            const firstOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-01`;
+
+            const isWeekly = manualReport === 'weekly' || (now.getUTCDay() === 1 && (data.last_weekly_report || '') < mondayStr);
+            const isMonthly = manualReport === 'monthly' || (now.getUTCDate() === 1 && (data.last_monthly_report || '') < firstOfMonth);
 
             if (isWeekly || isMonthly) {
               const periodDays = isMonthly ? 30 : 7;
@@ -242,6 +249,9 @@ jobs:
                 core.setOutput('report_subject', `⭐ ${periodLabel} Star Report (${startSnapshot} ~ ${today})`);
                 core.setOutput('report_body', reportLines.join('\n'));
                 core.info(`Generated ${periodLabel.toLowerCase()} report.`);
+
+                if (isWeekly) data.last_weekly_report = today;
+                if (isMonthly) data.last_monthly_report = today;
               } else {
                 core.info('Not enough history data for report yet.');
                 core.setOutput('has_report', 'false');
@@ -249,6 +259,10 @@ jobs:
             } else {
               core.setOutput('has_report', 'false');
             }
+
+            // Write stars.json after report logic so report dates are included
+            fs.writeFileSync(dataPath, JSON.stringify(data, null, 2) + '\n');
+            core.info(`Updated stars.json with ${Object.keys(current).length} repos.`);
 
       - name: Create GitHub Issue (alert)
         if: steps.check.outputs.has_changes == 'true' && (env.NOTIFICATION_CHANNEL == 'issue' || env.NOTIFICATION_CHANNEL == 'both')
