@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-06-12T23:39:02.873Z",
+  "last_checked": "2026-06-13T04:39:32.308Z",
   "last_weekly_report": "2026-06-08",
   "last_monthly_report": "2026-06-01",
   "repos": {
@@ -19,6 +19,7 @@
     "WoojinAhn/knowledge-lens": 0,
     "WoojinAhn/local-diffusion-lab": 0,
     "WoojinAhn/local-llm-pipeline": 0,
+    "WoojinAhn/local-stt-pipeline": 0,
     "WoojinAhn/miniroom-demo": 1,
     "WoojinAhn/mobile-claude-setup": 0,
     "WoojinAhn/my-first-blog": 0,
