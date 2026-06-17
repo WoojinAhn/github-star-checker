@@ -883,7 +883,7 @@
     "WoojinAhn/hound": 1,
     "WoojinAhn/knowledge-lens": 0,
     "WoojinAhn/local-diffusion-lab": 0,
-    "WoojinAhn/local-llm-pipeline": 0,
+    "WoojinAhn/local-llm-pipeline": 1,
     "WoojinAhn/local-stt-pipeline": 0,
     "WoojinAhn/miniroom-demo": 1,
     "WoojinAhn/mobile-claude-setup": 0,
