@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-06-19T07:20:00.861Z",
+  "last_checked": "2026-06-19T12:14:21.371Z",
   "last_weekly_report": "2026-06-15",
   "last_monthly_report": "2026-06-01",
   "repos": {
@@ -8,7 +8,6 @@
     "WoojinAhn/cclanes": 0,
     "WoojinAhn/ccrelay": 0,
     "WoojinAhn/chrome-cookie-reader": 0,
-    "WoojinAhn/claude-config": 0,
     "WoojinAhn/claude-tutorial-playground": 0,
     "WoojinAhn/cursor-docs-crawler": 4,
     "WoojinAhn/CursorMeter": 3,
