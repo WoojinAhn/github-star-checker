@@ -864,14 +864,14 @@
     "WoojinAhn/yolo-achievement": 0
   },
   "2026-07-23": {
-    "WoojinAhn/ai-tools-radar": 1,
+    "WoojinAhn/ai-tools-radar": 0,
     "WoojinAhn/backlog-idea-app": 0,
     "WoojinAhn/cclanes": 0,
     "WoojinAhn/ccrelay": 0,
     "WoojinAhn/chrome-cookie-reader": 0,
     "WoojinAhn/claude-tutorial-playground": 0,
-    "WoojinAhn/cursor-docs-crawler": 4,
-    "WoojinAhn/CursorMeter": 6,
+    "WoojinAhn/cursor-docs-crawler": 3,
+    "WoojinAhn/CursorMeter": 7,
     "WoojinAhn/custom-skills": 0,
     "WoojinAhn/dev-insights-dashboard": 0,
     "WoojinAhn/github-star-checker": 4,
