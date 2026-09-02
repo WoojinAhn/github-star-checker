@@ -325,6 +325,8 @@ jobs:
           to: ${{ secrets.NOTIFY_EMAIL }}
 
       - name: Commit and push
+        # Notification failures must not leave stale state that triggers duplicate alerts.
+        if: ${{ !cancelled() && steps.check.outcome == 'success' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
