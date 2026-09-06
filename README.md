@@ -66,6 +66,12 @@ gh secret set STAR_MONITOR_TOKEN
 
 ### GitHub Issue
 
+Star changes are appended as comments to one `star-notification` issue per UTC calendar month, created when the first change is detected. Each comment includes the repositories, star deltas, total stars, and check timestamp. The monthly issue is reused even if closed; keep its label and month marker in the body intact.
+
+Gmail still sends an email for each detected change when enabled. Weekly/monthly reports remain separate issues, and historical alert issues are left as they are. GitHub comment notifications depend on your issue subscription and repository notification settings.
+
+Example monthly thread: **⭐ Star Alerts (2026-09)**. The screenshot below shows the alert content, which is now recorded in a comment.
+
 <table><tr><td>
 <img src=".github/assets/screenshot-issue-alert.png" alt="Star notification issue" width="600">
 </td></tr></table>

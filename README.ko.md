@@ -66,6 +66,10 @@ gh secret set STAR_MONITOR_TOKEN
 
 ### GitHub Issue
 
+Star alerts now accumulate as comments in one issue per UTC calendar month (for example, **⭐ Star Alerts (2026-09)**), created on the first detected change. Closed monthly threads are also reused; keep their `star-notification` label and month marker intact. The screenshot below shows the alert content, now recorded in a comment.
+
+Gmail delivery and standalone weekly/monthly report issues remain unchanged. Historical alert issues are preserved. GitHub comment notifications depend on your issue subscription and repository notification settings.
+
 <table><tr><td>
 <img src=".github/assets/screenshot-issue-alert.png" alt="Star notification issue" width="600">
 </td></tr></table>
